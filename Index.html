@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="it" class="dark h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    <title>Coppa Divino Berti 2026 - Fantasy MotoGP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Rajdhani e Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        racing: {
+                            red: '#e10600',
+                            darkRed: '#a80200',
+                            dark: '#0f1115',
+                            card: '#181b22',
+                            border: '#2a2f3a',
+                            gold: '#ffd700',
+                            silver: '#c0c0c0',
+                            bronze: '#cd7f32'
+                        }
+                    },
+                    fontFamily: {
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+            background-color: #0b0c10;
+            color: #f1f5f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .font-racing {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .carbon-bg {
+            background-color: #12141c;
+            background-image: radial-gradient(#1e2330 1px, transparent 0);
+            background-size: 16px 16px;
+        }
+        .glass-card {
+            background: rgba(24, 27, 34, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Mobile Touch & iOS Scroll Fixes */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .ios-scroll {
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Previene lo zoom su Safari iOS sugli input */
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select, textarea, input {
+                font-size: 16px !important;
+            }
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f1115;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2f3a;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="carbon-bg min-h-screen pb-24 md:pb-12 text-slate-100 antialiased selection:bg-racing-red selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 glass-card border-b border-racing-border backdrop-blur-md pt-safe">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-racing-red text-white w-10 h-10 rounded-xl shadow-lg shadow-racing-red/30 flex items-center justify-center shrink-0">
+                    <i class="fa-solid font-racing text-xl fa-flag-checkered"></i>
+                </div>
+                <div>
+                    <h1 class="font-racing font-extrabold text-xl sm:text-2xl tracking-wider text-white flex items-center gap-1.5 leading-none">
+                        COPPA BERTI <span class="text-racing-red">2026</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-400 font-medium mt-0.5">Fantasy MotoGP League V1.6 Mobile Optimized</p>
+                </div>
+            </div>
+
+            <!-- Fast Stats Badges Header -->
+            <div class="hidden sm:flex items-center gap-2 text-xs">
+                <div class="bg-racing-card px-3 py-1.5 rounded-lg border border-racing-border flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-racing-gold"></i>
+                    <span class="text-gray-400">Leader:</span>
+                    <span id="headerLeader" class="font-bold text-white">BERTI (90)</span>
+                </div>
+                <div class="bg-racing-card px-3 py-1.5 rounded-lg border border-racing-border flex items-center gap-2">
+                    <i class="fa-solid fa-motorcycle text-racing-red"></i>
+                    <span class="text-gray-400">GP:</span>
+                    <span class="font-bold text-white">18/22</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 space-y-6">
+
+        <!-- DASHBOARD SECTION -->
+        <section id="section-standings" class="scroll-mt-20 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Standings Cards / Leaderboard -->
+                <div class="lg:col-span-2 space-y-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="font-racing text-xl sm:text-2xl font-bold tracking-wide flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-racing-red"></i> CLASSIFICA GENERALE
+                        </h2>
+                        <span class="text-[10px] bg-racing-red/10 text-racing-red border border-racing-red/30 px-2 py-0.5 rounded-full font-semibold">
+                            Aggiornata in Tempo Reale
+                        </span>
+                    </div>
+
+                    <!-- Leaderboard Dynamic Container -->
+                    <div id="standingsContainer" class="grid grid-cols-1 gap-2.5">
+                        <!-- Dynamic Leaderboard Cards -->
+                    </div>
+                </div>
+
+                <!-- Chart & Forecast Card Mobile -->
+                <div class="space-y-4">
+                    <div class="glass-card p-4 rounded-xl">
+                        <h3 class="font-racing text-lg font-bold tracking-wide mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar text-racing-red"></i> DISTRIBUZIONE PUNTI
+                        </h3>
+                        <div class="relative h-44 w-full">
+                            <canvas id="pointsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Card Mondiale Pubblica (Solo Lettura) -->
+                    <div class="glass-card p-4 rounded-xl relative overflow-hidden border border-racing-red/30">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-racing text-lg font-bold tracking-wide flex items-center gap-1.5 text-white">
+                                <i class="fa-solid fa-crown text-racing-gold"></i> MONDIALE PILOTI
+                            </h3>
+                            <span class="bg-racing-gold/20 text-racing-gold text-[10px] font-bold px-2 py-0.5 rounded border border-racing-gold/30">
+                                +10 PT BONUS
+                            </span>
+                        </div>
+                        
+                        <div id="worldChampionDisplay" class="mb-3 text-xs bg-racing-dark/80 p-2.5 rounded-lg border border-racing-border text-gray-300">
+                            <!-- Visualizzazione Campione impostato -->
+                        </div>
+                        
+                        <div class="text-[10px] text-gray-400 mb-2 uppercase font-semibold tracking-wider">Pronostici Giocatori:</div>
+                        <div id="worldChampionPredictionsContainer" class="space-y-2 text-xs">
+                            <!-- Generato dinamicamente via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAN PREMI SECTION WITH MOBILE FILTERS -->
+        <section id="section-gps" class="scroll-mt-20 space-y-4">
+            <div class="space-y-3 border-b border-racing-border pb-3">
+                <h2 class="font-racing text-2xl font-extrabold tracking-wide text-white flex items-center gap-2">
+                    <i class="fa-solid fa-flag-checkered text-racing-red"></i> DETTAGLIO GRAN PREMI
+                </h2>
+
+                <!-- Touch-friendly Pill Filters -->
+                <div class="flex flex-col gap-2.5">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="gpSearch" onkeyup="filterGPs()" placeholder="Cerca Gran Premio..." 
+                            class="w-full bg-racing-card text-xs text-white pl-9 pr-3 py-3 rounded-xl border border-racing-border focus:outline-none focus:border-racing-red transition-all touch-target">
+                    </div>
+                    
+                    <!-- Mobile Filter Pills -->
+                    <div class="flex items-center gap-2 overflow-x-auto py-1 ios-scroll -mx-1 px-1">
+                        <button onclick="setFilter('all', this)" class="filter-pill bg-racing-red text-white text-xs font-bold px-4 py-2.5 rounded-xl border border-racing-red shrink-0 touch-target active:scale-95 transition-transform">
+                            Tutti (22)
+                        </button>
+                        <button onclick="setFilter('completed', this)" class="filter-pill bg-racing-card text-gray-300 text-xs font-semibold px-4 py-2.5 rounded-xl border border-racing-border shrink-0 touch-target active:scale-95 transition-transform">
+                            Completati (18)
+                        </button>
+                        <button onclick="setFilter('upcoming', this)" class="filter-pill bg-racing-card text-gray-300 text-xs font-semibold px-4 py-2.5 rounded-xl border border-racing-border shrink-0 touch-target active:scale-95 transition-transform">
+                            Da Disputare (4)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GP Grid View Responsive -->
+            <div id="gpContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Dynamic Content -->
+            </div>
+        </section>
+
+        <!-- STATS SECTION -->
+        <section id="section-stats" class="scroll-mt-20 glass-card p-4 sm:p-6 rounded-2xl space-y-3">
+            <h3 class="font-racing text-xl sm:text-2xl font-bold tracking-wide flex items-center gap-2 text-white">
+                <i class="fa-solid fa-chart-line text-racing-red"></i> STATISTICHE
+            </h3>
+            
+            <div class="overflow-x-auto ios-scroll -mx-4 px-4 sm:mx-0 sm:px-0">
+                <table class="w-full text-left text-xs text-gray-300 min-w-[500px]">
+                    <thead class="bg-racing-dark text-gray-400 font-racing uppercase tracking-wider text-xs border-b border-racing-border">
+                        <tr>
+                            <th class="p-3">Fantamanager</th>
+                            <th class="p-3 text-center">Punti</th>
+                            <th class="p-3 text-center">GP Vinti</th>
+                            <th class="p-3 text-center">Pole</th>
+                            <th class="p-3 text-center">Sprint</th>
+                            <th class="p-3 text-center">Media/GP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsTableBody" class="divide-y divide-racing-border/50">
+                        <!-- Dynamic Stats Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER WITH ADMIN LINK -->
+    <footer class="max-w-7xl mx-auto px-4 py-6 border-t border-racing-border/40 text-center text-xs text-gray-500 mb-20 md:mb-0">
+        <p>© 2026 Coppa Divino Berti • Fantasy MotoGP League V1.6</p>
+        <button onclick="openAuthModal()" class="mt-3 text-gray-400 hover:text-racing-red transition-colors flex items-center justify-center gap-1.5 mx-auto py-2 px-4 rounded-xl border border-racing-border/60 bg-racing-card/40 touch-target active:scale-95">
+            <i class="fa-solid fa-lock text-[10px]"></i> Area Riservata Amministrazione
+        </button>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-racing-border z-40 px-4 py-2 flex justify-around items-center backdrop-blur-lg pb-safe">
+        <a href="#section-standings" onclick="setActiveNav(this)" class="mobile-nav-item flex flex-col items-center text-racing-red gap-1 touch-target justify-center w-full">
+            <i class="fa-solid fa-trophy text-lg"></i>
+            <span class="text-[10px] font-bold">Classifica</span>
+        </a>
+        <a href="#section-gps" onclick="setActiveNav(this)" class="mobile-nav-item flex flex-col items-center text-gray-400 hover:text-white gap-1 touch-target justify-center w-full">
+            <i class="fa-solid fa-flag-checkered text-lg"></i>
+            <span class="text-[10px] font-bold">Gare & GP</span>
+        </a>
+        <a href="#section-stats" onclick="setActiveNav(this)" class="mobile-nav-item flex flex-col items-center text-gray-400 hover:text-white gap-1 touch-target justify-center w-full">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span class="text-[10px] font-bold">Stats</span>
+        </a>
+    </nav>
+
+    <!-- Modal Mobile Optimized (Public GP View) -->
+    <div id="gpModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="glass-card max-w-2xl w-full rounded-2xl overflow-hidden border border-racing-border max-h-[88vh] flex flex-col">
+            <div id="modalHeader" class="bg-racing-card p-4 border-b border-racing-border flex justify-between items-center shrink-0">
+                <!-- Dynamic Header -->
+            </div>
+            <div id="modalContent" class="p-4 overflow-y-auto space-y-3 ios-scroll">
+                <!-- Dynamic Modal Content -->
+            </div>
+            <div class="bg-racing-card p-3 border-t border-racing-border flex justify-end shrink-0">
+                <button onclick="closeModal()" class="w-full sm:w-auto bg-racing-red hover:bg-racing-darkRed text-white px-6 py-3 rounded-xl text-xs font-bold font-racing uppercase tracking-wider transition-all touch-target active:scale-95">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3">
+        <div class="glass-card max-w-sm w-full rounded-2xl overflow-hidden border border-racing-border p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-racing-border pb-3">
+                <h3 class="font-racing font-bold text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-racing-red"></i> Accesso Admin
+                </h3>
+                <button onclick="closeAuthModal()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAuth(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1 font-medium">Inserisci Password</label>
+                    <input type="password" id="adminPassword" placeholder="••••••••" required 
+                           class="w-full bg-racing-dark text-base text-white px-3.5 py-3 rounded-xl border border-racing-border focus:outline-none focus:border-racing-red">
+                </div>
+                <p id="authError" class="text-xs text-racing-red font-semibold hidden flex items-center gap-1">
+                    <i class="fa-solid fa-circle-exclamation"></i> Password errata!
+                </p>
+                <button type="submit" class="w-full bg-racing-red hover:bg-racing-darkRed text-white py-3 rounded-xl text-xs font-bold font-racing uppercase tracking-wider transition-all touch-target active:scale-95">
+                    Accedi al Pannello
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL MODAL -->
+    <div id="adminPanelModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="glass-card max-w-4xl w-full rounded-2xl overflow-hidden border border-racing-border max-h-[92vh] flex flex-col">
+            <!-- Header -->
+            <div class="bg-racing-card p-4 border-b border-racing-border flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="bg-racing-red text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-racing font-bold text-lg text-white leading-tight">PANNELLO AMMINISTRAZIONE V1.6</h3>
+                        <p class="text-[10px] text-gray-400">Gestione Pronostici, Risultati GP e Mondiale</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Content / Form -->
+            <div class="p-3 sm:p-4 overflow-y-auto space-y-4 ios-scroll">
+                
+                <!-- SEZIONE ADMIN: IMPOSTAZIONE MONDIALE & SCELTE GIOCATORI -->
+                <div class="bg-racing-dark/90 p-3.5 rounded-xl border border-racing-gold/40 space-y-3">
+                    <h4 class="font-racing font-bold text-xs text-racing-gold uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown"></i> GESTIONE CAMPIONE DEL MONDO REALE E PRONOSTICI
+                    </h4>
+                    
+                    <div>
+                        <label class="block text-[10px] text-gray-400 font-semibold mb-1">Campione del Mondo Reale:</label>
+                        <input type="text" id="admin_world_champion" placeholder="Inserisci il vincitore reale (Es. Pecco / Marc)"
+                               class="w-full bg-racing-card text-yellow-400 font-bold text-xs p-2.5 rounded-lg border border-racing-border focus:outline-none focus:border-racing-gold">
+                    </div>
+
+                    <div class="border-t border-racing-border/60 pt-2">
+                        <label class="block text-[10px] text-gray-400 font-semibold mb-2">Piloti Pronosticati dai Giocatori per il Mondiale (+10 pt Bonus):</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                            <div>
+                                <label class="block text-[9px] text-gray-400 font-bold">BERTI</label>
+                                <input type="text" id="admin_wc_pick_BERTI" placeholder="Pilota" class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-gray-400 font-bold">LUDO</label>
+                                <input type="text" id="admin_wc_pick_LUDO" placeholder="Pilota" class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-gray-400 font-bold">MARQ</label>
+                                <input type="text" id="admin_wc_pick_MARQ" placeholder="Pilota" class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-gray-400 font-bold">POLLO</label>
+                                <input type="text" id="admin_wc_pick_POLLO" placeholder="Pilota" class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border">
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <label class="block text-[9px] text-gray-400 font-bold">RAPA</label>
+                                <input type="text" id="admin_wc_pick_RAPA" placeholder="Pilota" class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Select GP -->
+                <div class="bg-racing-dark/60 p-3.5 rounded-xl border border-racing-border">
+                    <label class="block text-xs font-bold text-gray-300 mb-1 font-racing uppercase">Seleziona Gran Premio da Modificare / Inserire</label>
+                    <select id="adminSelectGP" onchange="loadGPAdminData()" class="w-full bg-racing-card text-xs text-white p-2.5 rounded-xl border border-racing-border focus:outline-none focus:border-racing-red">
+                        <!-- Options generated dynamically -->
+                    </select>
+                </div>
+
+                <!-- GP Options (Automated) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-racing-dark/60 p-3 rounded-xl border border-racing-border">
+                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Stato Gara (Automatico)</label>
+                        <select id="adminGPStatus" disabled class="w-full bg-racing-card/60 text-xs text-gray-300 p-2.5 rounded-lg border border-racing-border cursor-not-allowed">
+                            <option value="upcoming">Da Disputare</option>
+                            <option value="completed">Completato</option>
+                        </select>
+                    </div>
+                    <div class="bg-racing-dark/60 p-3 rounded-xl border border-racing-border">
+                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Vincitore GP (Calcolato in Automatico)</label>
+                        <input type="text" id="adminGPWinner" readonly placeholder="- Automatico -" 
+                               class="w-full bg-racing-card/60 text-xs text-yellow-400 font-bold p-2.5 rounded-lg border border-racing-border cursor-not-allowed">
+                    </div>
+                </div>
+
+                <!-- Official Real Race Results Input Grid -->
+                <div class="bg-racing-dark/80 p-3.5 rounded-xl border border-racing-red/40 space-y-2">
+                    <h4 class="font-racing font-bold text-xs text-racing-red uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-flag-checkered"></i> RISULTATI REALI UFFICIALI GP (RIFERIMENTO)
+                    </h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 text-xs">
+                        <div>
+                            <label class="block text-[9px] text-gray-400">Pole Reale</label>
+                            <input type="text" id="admin_real_pole" placeholder="Es. BEZZ" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-gray-400">Sprint Reale</label>
+                            <input type="text" id="admin_real_sprint" placeholder="Es. MARQ" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-gray-400">1° Reale</label>
+                            <input type="text" id="admin_real_p1" placeholder="Es. BEZZ" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border font-semibold text-yellow-400">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-gray-400">2° Reale</label>
+                            <input type="text" id="admin_real_p2" placeholder="Es. MARQ" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-gray-400">3° Reale</label>
+                            <input type="text" id="admin_real_p3" placeholder="Es. DIGGIA" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-2 rounded border border-racing-border font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] text-racing-red font-semibold">DNF Reale/i</label>
+                            <input type="text" id="admin_real_dnf" placeholder="Es. ZARCO, MIR" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-racing-red text-xs p-2 rounded border border-racing-border font-medium">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Players Table / Form Inputs -->
+                <div class="space-y-3">
+                    <h4 class="font-racing font-bold text-sm text-gray-300 flex items-center gap-1.5 border-b border-racing-border/60 pb-1">
+                        <i class="fa-solid fa-users text-racing-red"></i> PRONOSTICI E PUNTEGGI PER GIOCATORE (V1.6)
+                    </h4>
+
+                    <div id="adminPlayersContainer" class="space-y-3">
+                        <!-- Dynamic Player Input Cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="bg-racing-card p-3 sm:p-4 border-t border-racing-border flex flex-col sm:flex-row gap-2 justify-between items-center shrink-0">
+                <button onclick="autoCalculateAdminScores()" class="w-full sm:w-auto bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 border border-yellow-500/40 text-xs px-4 py-2.5 rounded-xl font-racing font-bold uppercase flex items-center justify-center gap-1.5 touch-target active:scale-95">
+                    <i class="fa-solid fa-calculator"></i> Auto Calcola Punti V1.6
+                </button>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button onclick="closeAdminPanel()" class="w-1/2 sm:w-auto bg-racing-dark hover:bg-gray-800 text-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold font-racing uppercase touch-target">
+                        Annulla
+                    </button>
+                    <button onclick="saveAdminData()" class="w-1/2 sm:w-auto bg-racing-red hover:bg-racing-darkRed text-white px-5 py-2.5 rounded-xl text-xs font-bold font-racing uppercase shadow-lg shadow-racing-red/20 flex items-center justify-center gap-1.5 touch-target active:scale-95">
+                        <i class="fa-solid fa-floppy-disk"></i> Salva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        const defaultGPData = [
+            {
+                id: 1, name: "Chang Buriram (Thailandia)", flag: "🇹🇭", status: "completed", winner: "BERTI",
+                realResults: { pole: "Bez", sprint: "Marq", p1: "Bez", p2: "Acosta", p3: "Fernandez", dnf: "Mir" },
+                results: {
+                    BERTI: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "Diggia", dnf: "Zarco", points: 6 },
+                    RAPA: { pole: "Bez", sprint: "Bez", p1: "Marq", p2: "Bez", p3: "Pecco", dnf: "Mir", points: 4 },
+                    LUDO: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Diggia", dnf: "Binder", points: 5 },
+                    POLLO: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "Diggia", dnf: "Acosta", points: 6 },
+                    MARQ: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "Acosta", dnf: "Morbido", points: 7 }
+                }
+            },
+            {
+                id: 2, name: "Ayrton Senna (Brasile)", flag: "🇧🇷", status: "completed", winner: "POLLO",
+                realResults: { pole: "Diggia", sprint: "Marq", p1: "Bez", p2: "Martin", p3: "Diggia", dnf: "Mir, Miller, Binder" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Pecco", dnf: "Binder", points: 3 },
+                    RAPA: { pole: "Marq", sprint: "Acosta", p1: "Marq", p2: "Acosta", p3: "Bez", dnf: "Mir", points: 2 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Rins", points: 3 },
+                    POLLO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Mir", points: 4 },
+                    MARQ: { pole: "Marq", sprint: "Acosta", p1: "Marq", p2: "Acosta", p3: "Bez", dnf: "Rins", points: 1 }
+                }
+            },
+            {
+                id: 3, name: "Cota (America)", flag: "🇺🇸", status: "completed", winner: "RAPA",
+                realResults: { pole: "Diggia", sprint: "Martin", p1: "Bez", p2: "Martin", p3: "Acosta", dnf: "Mir,Zarco" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Diggia", dnf: "Zarco", points: 2 },
+                    RAPA: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Mir", points: 3 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Diggia", p2: "Marq", p3: "Bez", dnf: "Mir", points: 2 },
+                    POLLO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Ogura", dnf: "Mir", points: 1 },
+                    MARQ: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Martin", dnf: "Zarco", points: 3 }
+                }
+            },
+            {
+                id: 4, name: "Jerez (Spagna)", flag: "🇪🇸", status: "completed", winner: "BERTI",
+                realResults: { pole: "Marq", sprint: "Marq", p1: "A Marq", p2: "Bez", p3: "Diggia", dnf: "Marq" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "A Marq", p2: "Diggia", p3: "Marq", dnf: "Fernandez", points: 9 },
+                    RAPA: { pole: "-", sprint: "Acosta", p1: "Marq", p2: "Pecco", p3: "Bez", dnf: "Mir", points: 0 },
+                    LUDO: { pole: "Bez", sprint: "Martin", p1: "Bez", p2: "Martin", p3: "Marq", dnf: "Mir", points: 1 },
+                    POLLO: { pole: "-", sprint: "Marq", p1: "Marq", p2: "Diggia", p3: "Bez", dnf: "Mir", points: 0 },
+                    MARQ: { pole: "Diggia", sprint: "A Marq", p1: "Bez", p2: "A Marq", p3: "Diggia", dnf: "Quarta", points: 4 }
+                }
+            },
+            {
+                id: 5, name: "Le Mans (Francia)", flag: "🇫🇷", status: "completed", winner: "LUDO",
+                realResults: { pole: "Pecco", sprint: "Martin", p1: "Martin", p2: "Bez", p3: "Ogura", dnf: "Pecco,Mir,Moreira" },
+                results: {
+                    BERTI: { pole: "Zarco", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Zarco", dnf: "Pecco", points: 1 },
+                    RAPA: { pole: "-", sprint: "Acosta", p1: "Martin", p2: "Acosta", p3: "Marq", dnf: "Mir", points: 0 },
+                    LUDO: { pole: "A Marq", sprint: "Marq", p1: "Martin", p2: "Bez", p3: "Marq", dnf: "Miller", points: 7 },
+                    POLLO: { pole: "-", sprint: "Pecco", p1: "Pecco", p2: "Marq", p3: "Bez", dnf: "Mir", points: 0 },
+                    MARQ: { pole: "Diggia", sprint: "Martin", p1: "Diggia", p2: "Martin", p3: "Bez", dnf: "Moreira", points: 5 }
+                }
+            },
+            {
+                id: 6, name: "Circuit de Barcelona (Catalogna)", flag: "🇪🇸", status: "completed", winner: "BERTI",
+                realResults: { pole: "Acosta", sprint: "A Marq", p1: "Diggia", p2: "Aldeguer", p3: "Pecco", dnf: "Zarco" },
+                results: {
+                    BERTI: { pole: "Acosta", sprint: "A Marq", p1: "A Marq", p2: "Bez", p3: "Acosta", dnf: "Zarco", points: 5 },
+                    RAPA: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "A Marq", p3: "Diggia", dnf: "Mir", points: 1 },
+                    LUDO: { pole: "Acosta", sprint: "Acosta", p1: "Bez", p2: "A Marq", p3: "Acosta", dnf: "Martin", points: 2 },
+                    POLLO: { pole: "Acosta", sprint: "Acosta", p1: "A Marq", p2: "Bez", p3: "Acosta", dnf: "Mir", points: 2 },
+                    MARQ: { pole: "A Marq", sprint: "Bez", p1: "A Marq", p2: "Bez", p3: "Acosta", dnf: "Marini", points: 0 }
+                }
+            },
+            {
+                id: 7, name: "Mugello (Italia)", flag: "🇮🇹", status: "completed", winner: "MARQ",
+                realResults: { pole: "Bez", sprint: "Fernandez", p1: "Bez", p2: "Martin", p3: "Pecco", dnf: "Cal" },
+                results: {
+                    BERTI: { pole: "Diggia", sprint: "Diggia", p1: "Diggia", p2: "Pecco", p3: "Bez", dnf: "Pirro", points: 2 },
+                    RAPA: { pole: "Diggia", sprint: "Pecco", p1: "Pecco", p2: "Diggia", p3: "Bez", dnf: "Mir", points: 2 },
+                    LUDO: { pole: "Diggia", sprint: "Diggia", p1: "Diggia", p2: "Pecco", p3: "Bez", dnf: "Morbido", points: 2 },
+                    POLLO: { pole: "Diggia", sprint: "Diggia", p1: "Diggia", p2: "Pecco", p3: "Bestia", dnf: "Mir", points: 1 },
+                    MARQ: { pole: "Bez", sprint: "Martin", p1: "Diggia", p2: "Bez", p3: "Martin", dnf: "Razga", points: 4 }
+                }
+            },
+            {
+                id: 8, name: "Balaton Park (Ungheria)", flag: "🇭🇺", status: "completed", winner: "POLLO",
+                realResults: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Pecco", dnf: "Mir" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Acosta", p1: "Acosta", p2: "Bez", p3: "Diggia", dnf: "Lecuona", points: 3 },
+                    RAPA: { pole: "-", sprint: "Marq", p1: "Bez", p2: "Acosta", p3: "Marq", dnf: "Mir", points: 0 },
+                    LUDO: { pole: "Acosta", sprint: "Martin", p1: "Martin", p2: "Bez", p3: "Acosta", dnf: "Mir", points: 2 },
+                    POLLO: { pole: "Marq", sprint: "Acosta", p1: "Bez", p2: "Diggia", p3: "Acosta", dnf: "Mir", points: 4 },
+                    MARQ: { pole: "Acosta", sprint: "Acosta", p1: "Acosta", p2: "Diggia", p3: "Aldeguer", dnf: "Marini", points: 1 }
+                }
+            },
+            {
+                id: 9, name: "Brno (Repubblica Ceca)", flag: "🇨🇿", status: "completed", winner: "MARQ",
+                realResults: { pole: "Ogura", sprint: "Pecco", p1: "Marq", p2: "Ogura", p3: "Pecco", dnf: "Quarta" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Bez", p2: "Marq", p3: "Diggia", dnf: "Mir", points: 1 },
+                    RAPA: { pole: "-", sprint: "-", p1: "Pecco", p2: "Diggia", p3: "Bez", dnf: "Mir", points: 0 },
+                    LUDO: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Acosta", p3: "Ogura", dnf: "Mir", points: 1 },
+                    POLLO: { pole: "-", sprint: "Ogura", p1: "Ogura", p2: "Pecco", p3: "Diggia", dnf: "Mir", points: 0 },
+                    MARQ: { pole: "Diggia", sprint: "Bez", p1: "Marq", p2: "Bez", p3: "Diggia", dnf: "Miller", points: 4 }
+                }
+            },
+            {
+                id: 10, name: "TT Assen (Olanda)", flag: "🇳🇱", status: "completed", winner: "BERTI",
+                realResults: { pole: "Martin", sprint: "Fernandez", p1: "Ogura", p2: "Fernandez", p3: "Martin", dnf: "Mir" },
+                results: {
+                    BERTI: { pole: "Fernandez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "Martin", dnf: "Mir", points: 3 },
+                    RAPA: { pole: "Bez", sprint: "Acosta", p1: "Bez", p2: "Acosta", p3: "Fernandez", dnf: "Mir", points: 2 },
+                    LUDO: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Ogura", dnf: "Morbido", points: 1 },
+                    POLLO: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Ogura", p3: "Pecco", dnf: "Mir", points: 2 },
+                    MARQ: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Acosta", p3: "Marq", dnf: "Rins", points: 0 }
+                }
+            },
+            {
+                id: 11, name: "Sachsenring (Germania)", flag: "🇩🇪", status: "completed", winner: "BERTI",
+                realResults: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Ogura", p3: "Fernandez", dnf: "Mir" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Fernandez", p3: "Ogura", dnf: "Mir", points: 11 },
+                    RAPA: { pole: "-", sprint: "-", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Mir", points: 4 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "A Marq", p3: "Diggia", dnf: "Acosta", points: 8 },
+                    POLLO: { pole: "-", sprint: "-", p1: "Marq", p2: "Diggia", p3: "Martin", dnf: "Mir", points: 4 },
+                    MARQ: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Diggia", p3: "Bez", dnf: "Rins", points: 8 }
+                }
+            },
+            {
+                id: 12, name: "Silverstone (UK)", flag: "🇬🇧", status: "completed", winner: "BERTI",
+                realResults: { pole: "Martin", sprint: "Martin", p1: "Fernandez", p2: "Martin", p3: "Bez", dnf: "Mir" },
+                results: {
+                    BERTI: { pole: "Martin", sprint: "Martin", p1: "Bez", p2: "Fernandez", p3: "Martin", dnf: "Mir", points: 8 },
+                    RAPA: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Marin", dnf: "Mir", points: 1 },
+                    LUDO: { pole: "Fernandez", sprint: "Bez", p1: "Bez", p2: "Ogura", p3: "Marq", dnf: "Mir", points: 2 },
+                    POLLO: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Fernandez", p3: "Diggia", dnf: "Mir", points: 3 },
+                    MARQ: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Fernandez", p3: "Martin", dnf: "Esparga", points: 3 }
+                }
+            },
+            {
+                id: 13, name: "Motorland Aragon", flag: "🇪🇸", status: "completed", winner: "POLLO",
+                realResults: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Bez", dnf: "Pecco" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "A Marq", dnf: "Mir", points: 7 },
+                    RAPA: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Mir", points: 6 },
+                    LUDO: { pole: "Bez", sprint: "Marq", p1: "A Marq", p2: "Marq", p3: "Bez", dnf: "Mir", points: 7 },
+                    POLLO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Martin", p3: "Bez", dnf: "Mir", points: 8 },
+                    MARQ: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "A Marq", dnf: "Pecco", points: 8 }
+                }
+            },
+            {
+                id: 14, name: "Misano (San Marino)", flag: "🇸🇲", status: "completed", winner: "LUDO",
+                realResults: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "A Marq", p3: "Acosta", dnf: "Miller, Mir, Zarco" },
+                results: {
+                    BERTI: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "Diggia", dnf: "Miller", points: 4 },
+                    RAPA: { pole: "-", sprint: "-", p1: "-", p2: "-", p3: "-", dnf: "-", points: 0 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "A Marq", dnf: "Zarco", points: 8 },
+                    POLLO: { pole: "Bez", sprint: "Bez", p1: "Bez", p2: "Marq", p3: "A Marq", dnf: "Mir", points: 5 },
+                    MARQ: { pole: "Marq", sprint: "Marq", p1: "Bez", p2: "Marq", p3: "Diggia", dnf: "Binder", points: 3 }
+                }
+            },
+            {
+                id: 15, name: "Red Bull Ring", flag: "🇦🇹", status: "completed", winner: "BERTI",
+                realResults: { pole: "Martin", sprint: "Martin", p1: "Acosta", p2: "Martin", p3: "Bez", dnf: "A Marq" },
+                results: {
+                    BERTI: { pole: "Acosta", sprint: "Acosta", p1: "Acosta", p2: "Marq", p3: "Bez", dnf: "Pecco", points: 6 },
+                    RAPA: { pole: "Bez", sprint: "Acosta", p1: "Bez", p2: "Acosta", p3: "Fernandez", dnf: "Mir", points: 1 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Martin", p3: "Bez", dnf: "A Marq", points: 6 },
+                    POLLO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Martin", dnf: "Mir", points: 2 },
+                    MARQ: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Bez", dnf: "Mir", points: 3 }
+                }
+            },
+            {
+                id: 16, name: "Motegi (Giappone)", flag: "🇯🇵", status: "completed", winner: "BERTI",
+                realResults: { pole: "Martin", sprint: "Marq", p1: "Marq", p2: "Martin", p3: "Bez", dnf: "-" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Acosta", dnf: "Rins", points: 7 },
+                    RAPA: { pole: "Bez", sprint: "Acosta", p1: "Marq", p2: "Acosta", p3: "A Marq", dnf: "Chantra", points: 4 },
+                    LUDO: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "Acosta", p3: "Bez", dnf: "Bestia", points: 8 },
+                    POLLO: { pole: "-", sprint: "-", p1: "Marq", p2: "Martin", p3: "Acosta", dnf: "Mir", points: 3 },
+                    MARQ: { pole: "Acosta", sprint: "Marq", p1: "Marq", p2: "A Marq", p3: "Bez", dnf: "Morbido", points: 8 }
+                }
+            },
+            {
+                id: 17, name: "Mandalika (Indonesia)", flag: "🇮🇩", status: "completed", winner: "BERTI",
+                realResults: { pole: "Fernandez", sprint: "Marq", p1: "Bez", p2: "Fernandez", p3: "Martin", dnf: "-" },
+                results: {
+                    BERTI: { pole: "Fernandez", sprint: "Fernandez", p1: "Bez", p2: "Martin", p3: "Fernandez", dnf: "Bestia", points: 8 },
+                    RAPA: { pole: "Bez", sprint: "Fernandez", p1: "Bez", p2: "Marq", p3: "Fernandez", dnf: "Binder", points: 5 },
+                    LUDO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Martin", dnf: "Bestia", points: 5 },
+                    POLLO: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Martin", p3: "Bez", dnf: "Bestia", points: 2 },
+                    MARQ: { pole: "Martin", sprint: "Martin", p1: "Marq", p2: "Bez", p3: "Martin", dnf: "Marini", points: 3 }
+                }
+            },
+            {
+                id: 18, name: "Phillip Island", flag: "🇦🇺", status: "completed", winner: "BERTI",
+                realResults: { pole: "Marq", sprint: "Marq", p1: "Gara cancellata", p2: "Gara cancellata", p3: "Gara cancellata", dnf: "Gara cancellata" },
+                results: {
+                    BERTI: { pole: "Marq", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Martin", dnf: "Pecco", points: 4 },
+                    RAPA: { pole: "-", sprint: "-", p1: "-", p2: "-", p3: "-", dnf: "-", points: 0 },
+                    LUDO: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Fernandez", dnf: "A Marq", points: 2 },
+                    POLLO: { pole: "Bez", sprint: "Marq", p1: "Marq", p2: "Bez", p3: "Martin", dnf: "Diggia", points: 2 },
+                    MARQ: { pole: "Marq", sprint: "Fernandez", p1: "Marq", p2: "Fernandez", p3: "Bez", dnf: "Zarco", points: 2 }
+                }
+            },
+            {
+                id: 19, name: "Losail (Qatar)", flag: "🇶🇦", status: "upcoming", winner: "-",
+                realResults: null,
+                results: null
+            },
+            {
+                id: 20, name: "Sepang (Malesia)", flag: "🇲🇾", status: "upcoming", winner: "-",
+                realResults: null,
+                results: null
+            },
+            {
+                id: 21, name: "Algarve (Portogallo)", flag: "🇵🇹", status: "upcoming", winner: "-",
+                realResults: null,
+                results: null
+            },
+            {
+                id: 22, name: "Ricardo Tormo (Valencia)", flag: "🇪🇸", status: "upcoming", winner: "-",
+                realResults: null,
+                results: null
+            }
+        ];
+
+        let gpData = defaultGPData;
+        let worldChampionReal = "";
+        let worldChampionPicks = {
+            BERTI: "Pecco Bagnaia",
+            RAPA: "Pecco Bagnaia",
+            LUDO: "Marc Marquez",
+            POLLO: "Marc Marquez",
+            MARQ: "Marc Marquez"
+        };
+
+        try {
+            const stored = localStorage.getItem('coppa_berti_2026_v1.6_data');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && Array.isArray(parsed) && parsed.length === 22) {
+                    gpData = parsed;
+                }
+            }
+            const storedWC = localStorage.getItem('coppa_berti_2026_v1.6_wc');
+            if (storedWC) {
+                worldChampionReal = storedWC;
+            }
+            const storedPicks = localStorage.getItem('coppa_berti_2026_v1.6_wc_picks');
+            if (storedPicks) {
+                const parsedPicks = JSON.parse(storedPicks);
+                if (parsedPicks) {
+                    worldChampionPicks = parsedPicks;
+                }
+            }
+        } catch(e) {
+            console.error("Errore nel caricamento del localStorage", e);
+        }
+
+        const playersList = ["BERTI", "LUDO", "MARQ", "POLLO", "RAPA"];
+
+        function cleanDriverName(str) {
+            if (!str) return '';
+            return str.toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]/g, '')
+                .replace(/^a\s*marq/, 'amarq')
+                .replace(/bezz/, 'bez');
+        }
+
+        function calculatePoints(prediction, real) {
+            if (!real || !prediction) return 0;
+            let total = 0;
+
+            const realPole = cleanDriverName(real.pole);
+            const realSprint = cleanDriverName(real.sprint);
+            const realP1 = cleanDriverName(real.p1);
+            const realP2 = cleanDriverName(real.p2);
+            const realP3 = cleanDriverName(real.p3);
+            const realDnfs = (real.dnf || '').split(',').map(cleanDriverName).filter(Boolean);
+
+            const predPole = cleanDriverName(prediction.pole);
+            const predSprint = cleanDriverName(prediction.sprint);
+            const predP1 = cleanDriverName(prediction.p1);
+            const predP2 = cleanDriverName(prediction.p2);
+            const predP3 = cleanDriverName(prediction.p3);
+            const predDnf = cleanDriverName(prediction.dnf);
+
+            if (predPole && predPole === realPole) total += 2;
+            if (predSprint && predSprint === realSprint) total += 2;
+
+            const realPodium = [realP1, realP2, realP3].filter(Boolean);
+            
+            if (predP1) {
+                if (predP1 === realP1) total += 3 + 1;
+                else if (realPodium.includes(predP1)) total += 1;
+            }
+            if (predP2) {
+                if (predP2 === realP2) total += 2 + 1;
+                else if (realPodium.includes(predP2)) total += 1;
+            }
+            if (predP3) {
+                if (predP3 === realP3) total += 1 + 1;
+                else if (realPodium.includes(predP3)) total += 1;
+            }
+            if (predDnf && realDnfs.includes(predDnf)) total += 1;
+
+            return total;
+        }
+
+        function calculateBreakdown(prediction, real) {
+            const res = { pole: 0, sprint: 0, p1: 0, p2: 0, p3: 0, dnf: 0 };
+            if (!real || !prediction) return res;
+
+            const realPole = cleanDriverName(real.pole);
+            const realSprint = cleanDriverName(real.sprint);
+            const realP1 = cleanDriverName(real.p1);
+            const realP2 = cleanDriverName(real.p2);
+            const realP3 = cleanDriverName(real.p3);
+            const realDnfs = (real.dnf || '').split(',').map(cleanDriverName).filter(Boolean);
+
+            const predPole = cleanDriverName(prediction.pole);
+            const predSprint = cleanDriverName(prediction.sprint);
+            const predP1 = cleanDriverName(prediction.p1);
+            const predP2 = cleanDriverName(prediction.p2);
+            const predP3 = cleanDriverName(prediction.p3);
+            const predDnf = cleanDriverName(prediction.dnf);
+
+            if (predPole && predPole === realPole) res.pole = 2;
+            if (predSprint && predSprint === realSprint) res.sprint = 2;
+
+            const realPodium = [realP1, realP2, realP3].filter(Boolean);
+
+            if (predP1) {
+                if (predP1 === realP1) res.p1 = 3 + 1;
+                else if (realPodium.includes(predP1)) res.p1 = 1;
+            }
+            if (predP2) {
+                if (predP2 === realP2) res.p2 = 2 + 1;
+                else if (realPodium.includes(predP2)) res.p2 = 1;
+            }
+            if (predP3) {
+                if (predP3 === realP3) res.p3 = 1 + 1;
+                else if (realPodium.includes(predP3)) res.p3 = 1;
+            }
+            if (predDnf && realDnfs.includes(predDnf)) res.dnf = 1;
+
+            return res;
+        }
+
+        function computeAutomatedWinner(scores) {
+            let maxVal = -1;
+            let winners = [];
+            playersList.forEach(p => {
+                const pt = Number(scores[p] || 0);
+                if (pt > maxVal) {
+                    maxVal = pt;
+                    winners = [p];
+                } else if (pt === maxVal && maxVal > 0) {
+                    winners.push(p);
+                }
+            });
+            if (maxVal <= 0 || winners.length === 0) return "-";
+            return winners.join(" / ");
+        }
+
+        function renderWorldChampionCard() {
+            const displayEl = document.getElementById('worldChampionDisplay');
+            if (displayEl) {
+                displayEl.innerHTML = worldChampionReal
+                    ? `Campione del Mondo: <span class="text-yellow-400 font-bold uppercase">${worldChampionReal}</span>`
+                    : `Campione del Mondo: <span class="text-gray-500 italic">Non ancora decretato dall'Admin</span>`;
+            }
+
+            const container = document.getElementById('worldChampionPredictionsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const cleanReal = cleanDriverName(worldChampionReal);
+
+            playersList.forEach(player => {
+                const pickedDriver = worldChampionPicks[player] || '-';
+                const isWinner = cleanReal && cleanDriverName(pickedDriver).includes(cleanReal);
+
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-racing-dark/60 p-2.5 rounded-lg border border-racing-border";
+                row.innerHTML = `
+                    <span class="font-medium text-gray-200">${player}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-300 text-[11px] font-semibold">${pickedDriver}</span>
+                        ${isWinner ? '<span class="bg-racing-gold/20 text-racing-gold text-[9px] px-1.5 py-0.5 rounded font-bold border border-racing-gold/40">+10 PT</span>' : ''}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function autoCalculateAdminScores() {
+            const realResults = {
+                pole: document.getElementById('admin_real_pole').value,
+                sprint: document.getElementById('admin_real_sprint').value,
+                p1: document.getElementById('admin_real_p1').value,
+                p2: document.getElementById('admin_real_p2').value,
+                p3: document.getElementById('admin_real_p3').value,
+                dnf: document.getElementById('admin_real_dnf').value
+            };
+
+            const scores = {};
+            playersList.forEach(player => {
+                const pred = {
+                    pole: document.getElementById(`admin_${player}_pole`).value,
+                    sprint: document.getElementById(`admin_${player}_sprint`).value,
+                    p1: document.getElementById(`admin_${player}_p1`).value,
+                    p2: document.getElementById(`admin_${player}_p2`).value,
+                    p3: document.getElementById(`admin_${player}_p3`).value,
+                    dnf: document.getElementById(`admin_${player}_dnf`).value
+                };
+
+                const calcScore = calculatePoints(pred, realResults);
+                document.getElementById(`admin_${player}_points`).value = calcScore;
+                scores[player] = calcScore;
+            });
+
+            // Automazione Stato Gara e Vincitore
+            const hasRealData = Object.values(realResults).some(v => v.trim() !== '');
+            const autoStatus = hasRealData ? 'completed' : 'upcoming';
+            const autoWinner = hasRealData ? computeAutomatedWinner(scores) : '-';
+
+            document.getElementById('adminGPStatus').value = autoStatus;
+            document.getElementById('adminGPWinner').value = autoWinner;
+
+            updateAdminBreakdowns();
+            alert(`Punteggi calcolati automaticamente!\n• Stato Gara: ${autoStatus === 'completed' ? 'Completato' : 'Da Disputare'}\n• Vincitore GP: ${autoWinner}`);
+        }
+
+        function updateAdminBreakdowns() {
+            const realResults = {
+                pole: document.getElementById('admin_real_pole').value,
+                sprint: document.getElementById('admin_real_sprint').value,
+                p1: document.getElementById('admin_real_p1').value,
+                p2: document.getElementById('admin_real_p2').value,
+                p3: document.getElementById('admin_real_p3').value,
+                dnf: document.getElementById('admin_real_dnf').value
+            };
+
+            const hasRealData = Object.values(realResults).some(v => v.trim() !== '');
+            document.getElementById('adminGPStatus').value = hasRealData ? 'completed' : 'upcoming';
+
+            const currentScores = {};
+            playersList.forEach(player => {
+                const ptInput = document.getElementById(`admin_${player}_points`);
+                currentScores[player] = ptInput ? (parseInt(ptInput.value) || 0) : 0;
+
+                const pred = {
+                    pole: document.getElementById(`admin_${player}_pole`) ? document.getElementById(`admin_${player}_pole`).value : '',
+                    sprint: document.getElementById(`admin_${player}_sprint`) ? document.getElementById(`admin_${player}_sprint`).value : '',
+                    p1: document.getElementById(`admin_${player}_p1`) ? document.getElementById(`admin_${player}_p1`).value : '',
+                    p2: document.getElementById(`admin_${player}_p2`) ? document.getElementById(`admin_${player}_p2`).value : '',
+                    p3: document.getElementById(`admin_${player}_p3`) ? document.getElementById(`admin_${player}_p3`).value : '',
+                    dnf: document.getElementById(`admin_${player}_dnf`) ? document.getElementById(`admin_${player}_dnf`).value : ''
+                };
+
+                const pts = calculateBreakdown(pred, realResults);
+
+                ['pole', 'sprint', 'p1', 'p2', 'p3', 'dnf'].forEach(cat => {
+                    const el = document.getElementById(`badge_${player}_${cat}`);
+                    if (el) {
+                        const val = pts[cat];
+                        if (val > 0) {
+                            const isYellow = (cat === 'p1' && val === 1) || (cat === 'p2' && val === 1) || (cat === 'p3' && val === 1);
+                            el.textContent = `+${val} pt`;
+                            el.className = isYellow 
+                                ? "block text-[9px] text-yellow-400 font-bold mt-0.5" 
+                                : "block text-[9px] text-green-400 font-bold mt-0.5";
+                        } else {
+                            el.textContent = "0 pt";
+                            el.className = "block text-[9px] text-gray-500 font-normal mt-0.5";
+                        }
+                    }
+                });
+            });
+
+            if (hasRealData) {
+                document.getElementById('adminGPWinner').value = computeAutomatedWinner(currentScores);
+            } else {
+                document.getElementById('adminGPWinner').value = '-';
+            }
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('coppa_berti_2026_v1.6_data', JSON.stringify(gpData));
+            localStorage.setItem('coppa_berti_2026_v1.6_wc', worldChampionReal);
+            localStorage.setItem('coppa_berti_2026_v1.6_wc_picks', JSON.stringify(worldChampionPicks));
+        }
+
+        function calculatePlayerTotal(player) {
+            let total = gpData.reduce((acc, gp) => {
+                if (gp.status === 'completed' && gp.results && gp.results[player]) {
+                    return acc + Number(gp.results[player].points || 0);
+                }
+                return acc;
+            }, 0);
+
+            // Calcolo del bonus +10 PT per il Mondiale
+            const cleanReal = cleanDriverName(worldChampionReal);
+            if (cleanReal && worldChampionPicks[player]) {
+                const picked = cleanDriverName(worldChampionPicks[player]);
+                if (picked.includes(cleanReal)) {
+                    total += 10;
+                }
+            }
+            return total;
+        }
+
+        function recalculateStats() {
+            const totals = {};
+            const wins = {};
+            const poles = {};
+            const sprints = {};
+
+            playersList.forEach(p => {
+                totals[p] = calculatePlayerTotal(p);
+                wins[p] = 0;
+                poles[p] = 0;
+                sprints[p] = 0;
+            });
+
+            gpData.forEach(gp => {
+                if (gp.status === 'completed' && gp.winner && gp.winner !== '-') {
+                    const winnerNames = gp.winner.split('/').map(w => w.trim());
+                    winnerNames.forEach(w => {
+                        if (wins.hasOwnProperty(w)) {
+                            wins[w]++;
+                        }
+                    });
+                }
+                if (gp.status === 'completed' && gp.results && gp.realResults) {
+                    playersList.forEach(p => {
+                        if (gp.results[p]) {
+                            const bd = calculateBreakdown(gp.results[p], gp.realResults);
+                            if (bd.pole >= 2) poles[p]++;
+                            if (bd.sprint >= 2) sprints[p]++;
+                        }
+                    });
+                }
+            });
+
+            const sortedPlayers = [...playersList].sort((a, b) => totals[b] - totals[a]);
+
+            const standingsContainer = document.getElementById('standingsContainer');
+            standingsContainer.innerHTML = '';
+
+            sortedPlayers.forEach((player, index) => {
+                const rank = index + 1;
+                const pts = totals[player];
+                const leaderPts = totals[sortedPlayers[0]];
+                const diff = rank === 1 ? `+${pts - (sortedPlayers[1] ? totals[sortedPlayers[1]] : pts)} vs 2°` : `-${leaderPts - pts} dal leader`;
+                
+                let borderClass = rank === 1 ? 'border-l-4 border-l-racing-gold' : (rank === 2 ? 'border-l-4 border-l-slate-300' : (rank === 3 ? 'border-l-4 border-l-amber-700' : 'border-l-4 border-l-racing-border'));
+                let badgeRank = rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-amber-600 text-black' : (rank === 2 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-black' : (rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-800 text-white' : 'bg-racing-card border border-racing-border text-gray-400'));
+                let leaderTag = rank === 1 ? '<span class="bg-yellow-500/20 text-yellow-300 text-[9px] px-1.5 py-0.2 rounded border border-yellow-500/40 uppercase font-semibold">Leader</span>' : '';
+                let mondialePick = worldChampionPicks[player] || '-';
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-3.5 rounded-xl flex items-center justify-between ${borderClass}`;
+                card.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full ${badgeRank} flex items-center justify-center font-racing font-extrabold text-xl shadow-md shrink-0">
+                            ${rank}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <h3 class="font-racing font-bold text-lg text-white truncate">${player}</h3>
+                                ${leaderTag}
+                            </div>
+                            <p class="text-[11px] text-gray-400 truncate">Mondiale: <span class="text-gray-200 font-medium">${mondialePick}</span></p>
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-racing font-extrabold text-2xl text-yellow-400 leading-none">${pts} <span class="text-[10px] text-gray-400 font-normal">PT</span></div>
+                        <span class="text-[10px] text-gray-400 font-medium">${diff}</span>
+                    </div>
+                `;
+                standingsContainer.appendChild(card);
+            });
+
+            document.getElementById('headerLeader').textContent = `${sortedPlayers[0]} (${totals[sortedPlayers[0]]})`;
+
+            const statsBody = document.getElementById('statsTableBody');
+            statsBody.innerHTML = '';
+            sortedPlayers.forEach((player, index) => {
+                const pts = totals[player];
+                const completedGpsCount = gpData.filter(g => g.status === 'completed').length || 1;
+                const avg = (pts / completedGpsCount).toFixed(1);
+                let dotColor = index === 0 ? 'bg-yellow-400' : (index === 1 ? 'bg-slate-300' : (index === 2 ? 'bg-amber-600' : 'bg-gray-500'));
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-racing-card/60 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full ${dotColor}"></span> ${player}
+                    </td>
+                    <td class="p-3 text-center font-bold text-yellow-400 font-racing text-base">${pts}</td>
+                    <td class="p-3 text-center">${wins[player]}</td>
+                    <td class="p-3 text-center">${poles[player]}</td>
+                    <td class="p-3 text-center">${sprints[player]}</td>
+                    <td class="p-3 text-center font-semibold">${avg} pt</td>
+                `;
+                statsBody.appendChild(tr);
+            });
+
+            if (window.pointsChartInstance) {
+                window.pointsChartInstance.data.labels = sortedPlayers;
+                window.pointsChartInstance.data.datasets[0].data = sortedPlayers.map(p => totals[p]);
+                window.pointsChartInstance.update();
+            }
+
+            renderGPs(gpData);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('pointsChart').getContext('2d');
+            window.pointsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: playersList,
+                    datasets: [{
+                        label: 'Punti Totali',
+                        data: playersList.map(p => calculatePlayerTotal(p)),
+                        backgroundColor: ['#ffd700', '#c0c0c0', '#cd7f32', '#4a5568', '#2d3748'],
+                        borderColor: ['#eab308', '#94a3b8', '#b45309', '#718096', '#4a5568'],
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Rajdhani', size: 12 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#f1f5f9', font: { family: 'Rajdhani', weight: 'bold', size: 14 } }
+                        }
+                    }
+                }
+            });
+
+            renderWorldChampionCard();
+            recalculateStats();
+        });
+
+        function renderGPs(data) {
+            const container = document.getElementById('gpContainer');
+            container.innerHTML = '';
+
+            data.forEach(gp => {
+                const isCompleted = gp.status === 'completed';
+                const card = document.createElement('div');
+                card.className = `glass-card p-4 rounded-xl border border-racing-border flex flex-col justify-between ${!isCompleted ? 'opacity-70' : ''}`;
+
+                let winnerBadge = isCompleted 
+                    ? `<span class="bg-racing-gold/20 text-racing-gold text-[10px] font-bold px-2 py-0.5 rounded border border-racing-gold/30">Top: ${gp.winner}</span>`
+                    : `<span class="bg-gray-800 text-gray-400 text-[10px] font-medium px-2 py-0.5 rounded border border-gray-700">Da Disputare</span>`;
+
+                let realResultsStrip = '';
+                if (isCompleted && gp.realResults) {
+                    const r = gp.realResults;
+                    realResultsStrip = `
+                        <div class="my-2 p-2 bg-racing-dark/90 rounded-lg border border-racing-red/30">
+                            <div class="text-[9px] font-racing font-bold text-racing-red uppercase tracking-wider mb-1 flex items-center justify-between">
+                                <span><i class="fa-solid fa-flag-checkered mr-1"></i> RISULTATI REALI V1.6</span>
+                                <span class="text-gray-300 font-semibold">POLE: ${r.pole || '-'}</span>
+                            </div>
+                            <div class="grid grid-cols-4 gap-1 text-center text-[10px]">
+                                <div class="bg-racing-card/60 p-1 rounded border border-racing-border">
+                                    <span class="block text-[8px] text-gray-400 uppercase">SPRINT</span>
+                                    <span class="font-bold text-gray-200">${r.sprint || '-'}</span>
+                                </div>
+                                <div class="bg-racing-card/60 p-1 rounded border border-yellow-500/30">
+                                    <span class="block text-[8px] text-yellow-500 font-bold uppercase">1° PODIO</span>
+                                    <span class="font-bold text-yellow-400">${r.p1 || '-'}</span>
+                                </div>
+                                <div class="bg-racing-card/60 p-1 rounded border border-racing-border">
+                                    <span class="block text-[8px] text-gray-400 uppercase">2° PODIO</span>
+                                    <span class="font-bold text-gray-200">${r.p2 || '-'}</span>
+                                </div>
+                                <div class="bg-racing-card/60 p-1 rounded border border-racing-border">
+                                    <span class="block text-[8px] text-gray-400 uppercase">3° PODIO</span>
+                                    <span class="font-bold text-gray-200">${r.p3 || '-'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-racing font-bold text-racing-red uppercase">GP #${gp.id}</span>
+                            ${winnerBadge}
+                        </div>
+                        <h3 class="font-racing font-bold text-base text-white flex items-center gap-2 mb-2">
+                            <span class="text-xl">${gp.flag}</span> ${gp.name}
+                        </h3>
+                        ${realResultsStrip}
+                    </div>
+                    <button onclick="openGPDetails(${gp.id})" class="w-full mt-2 bg-racing-card hover:bg-racing-border text-xs text-gray-200 py-2.5 rounded-lg font-semibold border border-racing-border transition-all flex items-center justify-center gap-1.5 touch-target active:scale-95">
+                        <i class="fa-solid fa-eye text-racing-red"></i> ${isCompleted ? 'Vedi Pronostici e Punti V1.6' : 'Pronostici'}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGPs() {
+            const query = document.getElementById('gpSearch').value.toLowerCase();
+            const filtered = gpData.filter(gp => gp.name.toLowerCase().includes(query));
+            renderGPs(filtered);
+        }
+
+        function setFilter(type, btn) {
+            document.querySelectorAll('.filter-pill').forEach(b => {
+                b.classList.remove('bg-racing-red', 'text-white');
+                b.classList.add('bg-racing-card', 'text-gray-300');
+            });
+            btn.classList.remove('bg-racing-card', 'text-gray-300');
+            btn.classList.add('bg-racing-red', 'text-white');
+
+            if (type === 'all') renderGPs(gpData);
+            else if (type === 'completed') renderGPs(gpData.filter(g => g.status === 'completed'));
+            else if (type === 'upcoming') renderGPs(gpData.filter(g => g.status === 'upcoming'));
+        }
+
+        function openGPDetails(gpId) {
+            const gp = gpData.find(g => g.id === gpId);
+            if (!gp) return;
+
+            const modalHeader = document.getElementById('modalHeader');
+            modalHeader.innerHTML = `
+                <div>
+                    <span class="text-xs font-racing font-bold text-racing-red uppercase">GP #${gp.id}</span>
+                    <h3 class="font-racing font-extrabold text-xl text-white flex items-center gap-2">
+                        <span>${gp.flag}</span> ${gp.name}
+                    </h3>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            `;
+
+            const modalContent = document.getElementById('modalContent');
+            if (gp.status === 'completed') {
+                let html = '<div class="space-y-3">';
+                
+                if (gp.realResults) {
+                    const real = gp.realResults;
+                    html += `
+                        <div class="bg-racing-red/10 p-3 rounded-xl border border-racing-red/40 space-y-1">
+                            <span class="font-racing font-bold text-racing-red text-xs uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-flag-checkered"></i> Risultati Ufficiali Gara (Riferimento V1.6)
+                            </span>
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-[11px] text-gray-200 mt-1">
+                                <div><span class="text-gray-400 block text-[9px] uppercase">Pole</span><span class="font-bold text-white">${real.pole || '-'}</span></div>
+                                <div><span class="text-gray-400 block text-[9px] uppercase">Sprint</span><span class="font-bold text-white">${real.sprint || '-'}</span></div>
+                                <div><span class="text-gray-400 block text-[9px] uppercase">1° Posto</span><span class="font-bold text-yellow-400">${real.p1 || '-'}</span></div>
+                                <div><span class="text-gray-400 block text-[9px] uppercase">2° Posto</span><span class="font-bold text-white">${real.p2 || '-'}</span></div>
+                                <div><span class="text-gray-400 block text-[9px] uppercase">3° Posto</span><span class="font-bold text-white">${real.p3 || '-'}</span></div>
+                                <div><span class="text-racing-red block text-[9px] uppercase font-bold">DNF</span><span class="font-bold text-racing-red">${real.dnf || '-'}</span></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (gp.results) {
+                    playersList.forEach(player => {
+                        const res = gp.results[player] || { pole: '-', sprint: '-', p1: '-', p2: '-', p3: '-', dnf: '-', points: 0 };
+                        const pts = calculateBreakdown(res, gp.realResults);
+
+                        const renderPtBadge = (cat, val) => {
+                            if (val > 0) {
+                                let isYellow = (cat === 'p1' && val === 1) || (cat === 'p2' && val === 1) || (cat === 'p3' && val === 1);
+                                let colorClass = isYellow ? "text-yellow-400" : "text-green-400";
+                                return `<span class="block text-[9px] ${colorClass} font-bold leading-none mt-0.5">+${val} pt</span>`;
+                            }
+                            return `<span class="block text-[9px] text-gray-500 font-normal leading-none mt-0.5">0 pt</span>`;
+                        };
+
+                        html += `
+                            <div class="bg-racing-dark/80 p-3 rounded-xl border border-racing-border">
+                                <div class="flex justify-between items-center mb-2 border-b border-racing-border/40 pb-1">
+                                    <span class="font-racing font-bold text-white text-sm">${player}</span>
+                                    <span class="font-racing font-bold text-yellow-400 text-sm bg-yellow-400/10 px-2 py-0.5 rounded border border-yellow-400/20">${res.points} PT</span>
+                                </div>
+                                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-[11px] text-gray-300">
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-gray-500 block text-[9px] uppercase">Pole</span>
+                                        <span class="font-medium text-white">${res.pole}</span>
+                                        ${renderPtBadge('pole', pts.pole)}
+                                    </div>
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-gray-500 block text-[9px] uppercase">Sprint</span>
+                                        <span class="font-medium text-white">${res.sprint}</span>
+                                        ${renderPtBadge('sprint', pts.sprint)}
+                                    </div>
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-gray-500 block text-[9px] uppercase">1° Posto</span>
+                                        <span class="font-medium text-white">${res.p1}</span>
+                                        ${renderPtBadge('p1', pts.p1)}
+                                    </div>
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-gray-500 block text-[9px] uppercase">2° Posto</span>
+                                        <span class="font-medium text-white">${res.p2}</span>
+                                        ${renderPtBadge('p2', pts.p2)}
+                                    </div>
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-gray-500 block text-[9px] uppercase">3° Posto</span>
+                                        <span class="font-medium text-white">${res.p3}</span>
+                                        ${renderPtBadge('p3', pts.p3)}
+                                    </div>
+                                    <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                                        <span class="text-racing-red block text-[9px] uppercase font-bold">DNF</span>
+                                        <span class="font-medium text-racing-red">${res.dnf}</span>
+                                        ${renderPtBadge('dnf', pts.dnf)}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                html += '</div>';
+                modalContent.innerHTML = html;
+            } else {
+                modalContent.innerHTML = `
+                    <div class="text-center py-8 text-gray-400 space-y-2">
+                        <i class="fa-solid fa-clock text-3xl text-racing-red mb-2"></i>
+                        <p class="font-racing font-bold text-lg text-white">Gara da ancora disputare!</p>
+                        <p class="text-xs">I pronostici ufficiali e i risultati verranno pubblicati prima dell'inizio del weekend di gara.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('gpModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('gpModal').classList.add('hidden');
+        }
+
+        function openAuthModal() {
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('authError').classList.add('hidden');
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === 'Coppadivino.1') {
+                closeAuthModal();
+                openAdminPanel();
+            } else {
+                document.getElementById('authError').classList.remove('hidden');
+            }
+        }
+
+        function openAdminPanel() {
+            const selectGP = document.getElementById('adminSelectGP');
+            selectGP.innerHTML = '';
+            gpData.forEach(gp => {
+                const opt = document.createElement('option');
+                opt.value = gp.id;
+                opt.textContent = `GP #${gp.id} - ${gp.name} (${gp.status === 'completed' ? 'Completato' : 'Da Disputare'})`;
+                selectGP.appendChild(opt);
+            });
+
+            document.getElementById('admin_world_champion').value = worldChampionReal;
+            
+            playersList.forEach(player => {
+                const el = document.getElementById(`admin_wc_pick_${player}`);
+                if (el) {
+                    el.value = worldChampionPicks[player] || '';
+                }
+            });
+
+            loadGPAdminData();
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanelModal').classList.add('hidden');
+        }
+
+        function loadGPAdminData() {
+            const gpId = parseInt(document.getElementById('adminSelectGP').value);
+            const gp = gpData.find(g => g.id === gpId);
+            if (!gp) return;
+
+            document.getElementById('adminGPStatus').value = gp.status;
+            document.getElementById('adminGPWinner').value = gp.winner || '-';
+
+            const real = gp.realResults || { pole: '', sprint: '', p1: '', p2: '', p3: '', dnf: '' };
+            document.getElementById('admin_real_pole').value = real.pole || '';
+            document.getElementById('admin_real_sprint').value = real.sprint || '';
+            document.getElementById('admin_real_p1').value = real.p1 || '';
+            document.getElementById('admin_real_p2').value = real.p2 || '';
+            document.getElementById('admin_real_p3').value = real.p3 || '';
+            document.getElementById('admin_real_dnf').value = real.dnf || '';
+
+            const container = document.getElementById('adminPlayersContainer');
+            container.innerHTML = '';
+
+            playersList.forEach(player => {
+                const res = (gp.results && gp.results[player]) ? gp.results[player] : {
+                    pole: '', sprint: '', p1: '', p2: '', p3: '', dnf: '', points: 0
+                };
+
+                const card = document.createElement('div');
+                card.className = "bg-racing-dark/80 p-3 rounded-xl border border-racing-border space-y-2";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-racing-border/40 pb-1">
+                        <span class="font-racing font-bold text-white text-sm">${player}</span>
+                        <div class="flex items-center gap-1.5">
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Punti GP V1.6:</label>
+                            <input type="number" id="admin_${player}_points" value="${res.points}" min="0" max="25" oninput="updateAdminBreakdowns()"
+                                   class="w-16 bg-racing-card text-yellow-400 font-racing font-bold text-xs p-1 rounded border border-racing-border text-center">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 text-xs">
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-gray-400 uppercase font-semibold">Pole (+2)</label>
+                            <input type="text" id="admin_${player}_pole" value="${res.pole || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-1.5 rounded border border-racing-border mt-0.5">
+                            <span id="badge_${player}_pole" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-gray-400 uppercase font-semibold">Sprint (+2)</label>
+                            <input type="text" id="admin_${player}_sprint" value="${res.sprint || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-1.5 rounded border border-racing-border mt-0.5">
+                            <span id="badge_${player}_sprint" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-yellow-500 uppercase font-bold">1° Posto (+4/+1)</label>
+                            <input type="text" id="admin_${player}_p1" value="${res.p1 || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-1.5 rounded border border-racing-border mt-0.5 font-semibold">
+                            <span id="badge_${player}_p1" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-gray-400 uppercase font-semibold">2° Posto (+3/+1)</label>
+                            <input type="text" id="admin_${player}_p2" value="${res.p2 || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-1.5 rounded border border-racing-border mt-0.5">
+                            <span id="badge_${player}_p2" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-gray-400 uppercase font-semibold">3° Posto (+2/+1)</label>
+                            <input type="text" id="admin_${player}_p3" value="${res.p3 || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-white text-xs p-1.5 rounded border border-racing-border mt-0.5">
+                            <span id="badge_${player}_p3" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                        <div class="bg-racing-card/40 p-1.5 rounded border border-racing-border/60">
+                            <label class="block text-[9px] text-racing-red uppercase font-bold">DNF (+1)</label>
+                            <input type="text" id="admin_${player}_dnf" value="${res.dnf || ''}" placeholder="Pilota" oninput="updateAdminBreakdowns()"
+                                   class="w-full bg-racing-card text-racing-red text-xs p-1.5 rounded border border-racing-border mt-0.5 font-medium">
+                            <span id="badge_${player}_dnf" class="block text-[9px] text-gray-500 font-normal mt-0.5">0 pt</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateAdminBreakdowns();
+        }
+
+        function saveAdminData() {
+            worldChampionReal = document.getElementById('admin_world_champion').value.trim();
+
+            playersList.forEach(player => {
+                const inputEl = document.getElementById(`admin_wc_pick_${player}`);
+                if (inputEl) {
+                    worldChampionPicks[player] = inputEl.value.trim();
+                }
+            });
+
+            const gpId = parseInt(document.getElementById('adminSelectGP').value);
+            const gpIndex = gpData.findIndex(g => g.id === gpId);
+            if (gpIndex !== -1) {
+                const realResults = {
+                    pole: document.getElementById('admin_real_pole').value.trim(),
+                    sprint: document.getElementById('admin_real_sprint').value.trim(),
+                    p1: document.getElementById('admin_real_p1').value.trim(),
+                    p2: document.getElementById('admin_real_p2').value.trim(),
+                    p3: document.getElementById('admin_real_p3').value.trim(),
+                    dnf: document.getElementById('admin_real_dnf').value.trim()
+                };
+
+                const hasRealData = Object.values(realResults).some(v => v !== '');
+                const status = hasRealData ? 'completed' : 'upcoming';
+
+                const results = {};
+                const scores = {};
+                playersList.forEach(player => {
+                    const pts = parseInt(document.getElementById(`admin_${player}_points`).value) || 0;
+                    scores[player] = pts;
+                    results[player] = {
+                        pole: document.getElementById(`admin_${player}_pole`).value.trim(),
+                        sprint: document.getElementById(`admin_${player}_sprint`).value.trim(),
+                        p1: document.getElementById(`admin_${player}_p1`).value.trim(),
+                        p2: document.getElementById(`admin_${player}_p2`).value.trim(),
+                        p3: document.getElementById(`admin_${player}_p3`).value.trim(),
+                        dnf: document.getElementById(`admin_${player}_dnf`).value.trim(),
+                        points: pts
+                    };
+                });
+
+                const winner = hasRealData ? computeAutomatedWinner(scores) : '-';
+
+                gpData[gpIndex].status = status;
+                gpData[gpIndex].winner = winner;
+                gpData[gpIndex].realResults = realResults;
+                gpData[gpIndex].results = results;
+            }
+
+            saveDataToStorage();
+            renderWorldChampionCard();
+            recalculateStats();
+            closeAdminPanel();
+
+            alert('Salvataggio V1.6 completato con successo!');
+        }
+
+        function setActiveNav(element) {
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('text-racing-red');
+                item.classList.add('text-gray-400');
+            });
+            element.classList.remove('text-gray-400');
+            element.classList.add('text-racing-red');
+        }
+    </script>
+</body>
+</html>
